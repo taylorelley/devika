@@ -6,6 +6,11 @@ export default defineConfig({
   plugins: [sveltekit(), wasm()],
   server: {
     port: 3000,
+    allowedHosts: [
+      "localhost",
+      "127.0.0.1",
+      "devika.taylorelley.com",
+    ],
   },
   preview: {
     port: 3001,
