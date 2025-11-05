@@ -12,9 +12,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y build-essential software-properties-common curl sudo wget git
 RUN apt-get install -y python3 python3-pip
-RUN curl -fsSL https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:$PATH"
-RUN /root/.cargo/bin/uv venv
+RUN curl -fsSL https://astral.sh/uv/install.sh | sh && \
+    /root/.cargo/bin/uv venv
 ENV PATH="/home/nonroot/devika/.venv/bin:/root/.cargo/bin:$PATH"
 
 # copy devika python engine only
