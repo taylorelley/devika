@@ -22,8 +22,8 @@ ENV PATH="/home/nonroot/devika/.venv/bin:$PATH"
 COPY requirements.txt /home/nonroot/devika/
 RUN UV_HTTP_TIMEOUT=100000 uv pip install -r requirements.txt
 
-RUN python3 -m playwright install-deps chromium
-RUN python3 -m playwright install chromium
+RUN /home/nonroot/devika/.venv/bin/python3 -m playwright install-deps chromium
+RUN /home/nonroot/devika/.venv/bin/python3 -m playwright install chromium
 
 COPY src /home/nonroot/devika/src
 COPY config.toml /home/nonroot/devika/
