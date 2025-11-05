@@ -18,20 +18,16 @@ ADD https://astral.sh/uv/install.sh /uv-installer.sh
 # Run the installer then remove it
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 
-# Ensure the installed binary is on the `PATH`
-ENV PATH="/root/.local/bin/:$PATH"
-
-RUN uv venv
+# Create venv and install dependencies using explicit uv path
+RUN /root/.local/bin/uv venv
 
 # copy devika python engine only
 COPY requirements.txt /home/nonroot/devika/
-RUN uv pip install -r requirements.txt
+RUN /root/.local/bin/uv pip install -r requirements.txt
 
-#RUN python3 -m playwright install-deps chromium
-#RUN python3 -m playwright install chromium
+# Install Playwright with explicit venv python path
 RUN /home/nonroot/devika/.venv/bin/python3 -m playwright install-deps chromium
 RUN /home/nonroot/devika/.venv/bin/python3 -m playwright install chromium
-
 
 COPY src /home/nonroot/devika/src
 COPY config.toml /home/nonroot/devika/
@@ -40,8 +36,7 @@ COPY devika.py /home/nonroot/devika/
 RUN chown -R nonroot:nonroot /home/nonroot/devika
 
 USER nonroot
-WORKDIR /home/nonroot/devika
 ENV PATH="/home/nonroot/devika/.venv/bin:$PATH"
 RUN mkdir /home/nonroot/devika/db
 
-ENTRYPOINT [ "python3", "-m", "devika" ]
+ENTRYPOINT [ "/home/nonroot/devika/.venv/bin/python3", "-m", "devika" ]
