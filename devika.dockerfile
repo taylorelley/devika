@@ -12,13 +12,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y build-essential software-properties-common curl sudo wget git
 RUN apt-get install -y python3 python3-pip
-RUN curl -fsSL https://astral.sh/uv/install.sh | sh && \
-    /root/.cargo/bin/uv venv
-ENV PATH="/home/nonroot/devika/.venv/bin:/root/.cargo/bin:$PATH"
+
+# install uv using official recommended method
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv venv
+ENV PATH="/home/nonroot/devika/.venv/bin:$PATH"
 
 # copy devika python engine only
 COPY requirements.txt /home/nonroot/devika/
-RUN UV_HTTP_TIMEOUT=100000 /root/.cargo/bin/uv pip install -r requirements.txt 
+RUN UV_HTTP_TIMEOUT=100000 uv pip install -r requirements.txt 
 
 RUN playwright install-deps chromium
 RUN playwright install chromium
@@ -31,7 +33,7 @@ RUN chown -R nonroot:nonroot /home/nonroot/devika
 
 USER nonroot
 WORKDIR /home/nonroot/devika
-ENV PATH="/home/nonroot/devika/.venv/bin:/root/.cargo/bin:$PATH"
+ENV PATH="/home/nonroot/devika/.venv/bin:$PATH"
 RUN mkdir /home/nonroot/devika/db
 
 ENTRYPOINT [ "python3", "-m", "devika" ]
