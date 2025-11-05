@@ -20,10 +20,10 @@ ENV PATH="/home/nonroot/devika/.venv/bin:$PATH"
 
 # copy devika python engine only
 COPY requirements.txt /home/nonroot/devika/
-RUN UV_HTTP_TIMEOUT=100000 uv pip install -r requirements.txt 
+RUN UV_HTTP_TIMEOUT=100000 uv pip install -r requirements.txt
 
-RUN playwright install-deps chromium
-RUN playwright install chromium
+RUN python3 -m playwright install-deps chromium
+RUN python3 -m playwright install chromium
 
 COPY src /home/nonroot/devika/src
 COPY config.toml /home/nonroot/devika/
